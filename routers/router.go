@@ -10,20 +10,17 @@ import (
 
 func InitRouter() *gin.Engine {
 	router := gin.New()
-
 	router.Use(gin.Logger())
-
 	router.Use(gin.Recovery())
-
 	gin.SetMode(setting.RunMode)
-
 	router.Use(AllowAll())
 
+	// 无需鉴权的路由
 	AppNoAuthCheck(router)
-
 	return router
 }
 
+// 解决跨域
 func AllowAll() gin.HandlerFunc {
 	cfg := cors.Config{
 		AllowMethods:     []string{"*"},
@@ -31,7 +28,6 @@ func AllowAll() gin.HandlerFunc {
 		AllowCredentials: true,
 		MaxAge:           12 * time.Hour,
 	}
-
 	cfg.AllowAllOrigins = true
 	return cors.New(cfg)
 }

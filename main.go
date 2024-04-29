@@ -8,13 +8,18 @@ import (
 	"os"
 	"os/signal"
 	"paracraft-compete-backend/common/setting"
+	"paracraft-compete-backend/middleware/database/mysql"
 	"paracraft-compete-backend/routers"
 	"time"
 )
 
 func main() {
+	mysql.InitCompeteDB()
+
+	// 初始化路由
 	router := routers.InitRouter()
 
+	// 初始化服务
 	server := &http.Server{
 		Addr:           fmt.Sprintf(":%d", setting.HttpPort),
 		Handler:        router,
@@ -23,12 +28,14 @@ func main() {
 		MaxHeaderBytes: 1 << 20,
 	}
 
+	// 协程启动服务
 	go func() {
 		if err := server.ListenAndServe(); err != nil {
 			log.Printf("Listen: %s\n", err)
 		}
 	}()
 
+	// 管道监听, 阻塞等待中断信号, 优雅关闭服务
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt)
 	<-quit

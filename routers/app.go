@@ -11,4 +11,5 @@ func AppNoAuthCheck(router *gin.Engine) {
 	{
 		app.GET("/ping", controller.Test)
 	}
+
 }
