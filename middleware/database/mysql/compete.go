@@ -10,6 +10,8 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
+var CompeteDB *gorm.DB
+
 func initDB(dbName string) *gorm.DB {
 	dbType := setting.LoadStringParam(dbName, "TYPE")
 	user := setting.LoadStringParam(dbName, "USER")
@@ -29,10 +31,10 @@ func InitCompeteDB() {
 	dbName := "compete_test"
 	maxIdle := setting.LoadIntParam("mysql_setting", "MAX_IDLE_CONNECTION")
 	maxOpen := setting.LoadIntParam("mysql_setting", "MAX_OPEN_CONNECTION")
-	db := initDB(dbName)
-	db.DB().SetMaxIdleConns(maxIdle)
-	db.DB().SetMaxOpenConns(maxOpen)
-	db.DB().SetConnMaxLifetime(10 * time.Second)
+	CompeteDB = initDB(dbName)
+	CompeteDB.DB().SetMaxIdleConns(maxIdle)
+	CompeteDB.DB().SetMaxOpenConns(maxOpen)
+	CompeteDB.DB().SetConnMaxLifetime(10 * time.Second)
 	// 如果设置为true, `User`的默认表名为`user`, 使用`TableName`设置的表名不受影响
-	db.SingularTable(false)
+	CompeteDB.SingularTable(false)
 }

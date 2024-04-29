@@ -10,6 +10,7 @@ func AppNoAuthCheck(router *gin.Engine) {
 	app := router.Group("/")
 	{
 		app.GET("/ping", controller.Test)
+		app.GET("/competes", controller.GetCompeteList)
 	}
 
 }
